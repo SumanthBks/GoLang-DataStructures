@@ -87,6 +87,22 @@ func (b *Buckets) searchBucket(key string) bool {
 	return false
 }
 
+func (h *HashTable) update(key string, value string) {
+	h.array[returnIndex(key)].updateBucket(key, value)
+}
+
+func (b *Buckets) updateBucket(key string, value string) {
+	if b.searchBucket(key) {
+		currentNode := b.head
+		for currentNode != nil {
+			if currentNode.key == key {
+				currentNode.key = value
+			}
+			currentNode = currentNode.next
+		}
+	}
+}
+
 func hash(key string) int {
 	sum := 0
 	for _, k := range key {
@@ -129,4 +145,5 @@ func main() {
 	fmt.Println(ht.search("Koushika"))
 	ht.delete("Koushika")
 	fmt.Println(ht.search("Koushika"))
+	ht.update("Swathi", "Krishna Swathi")
 }
