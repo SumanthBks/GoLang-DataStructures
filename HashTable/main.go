@@ -133,10 +133,15 @@ func main() {
 		"Srawan",
 		"Anurag",
 		"Hari",
+		"Rithesh",
+		"Anoop",
 		"Mahesh",
 		"Swathi",
 		"Sumalatha",
 		"Sudhakar",
+		"Roger Federer",
+		"Rafeal Nadal",
+		"Pikachuuuuu",
 	}
 
 	for _, key := range listOfKeys {
