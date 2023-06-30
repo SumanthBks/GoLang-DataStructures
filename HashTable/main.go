@@ -147,8 +147,8 @@ func main() {
 	for _, key := range listOfKeys {
 		ht.insert(key)
 	}
-	fmt.Println(ht.search("Koushika"))
-	ht.delete("Koushika")
-	fmt.Println(ht.search("Koushika"))
+	fmt.Println(ht.search("Pikachuuuuu"))
+	ht.delete("Pikachuuuuu")
+	fmt.Println(ht.search("Pikachuuuuu"))
 	ht.update("Swathi", "Krishna Swathi")
 }
