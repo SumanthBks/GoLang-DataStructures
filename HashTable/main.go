@@ -19,12 +19,17 @@ type HashTable struct {
 }
 
 type Buckets struct {
-	head *LinkedList
+	length     int
+	linkedList *LinkedList
 }
 
 type LinkedList struct {
+	head *Node
+}
+
+type Node struct {
 	key  string
-	next *LinkedList
+	next *Node
 }
 
 func (h *HashTable) insert(key string) {
@@ -35,12 +40,20 @@ func (h *HashTable) insert(key string) {
 
 func (b *Buckets) insertBucket(key string) {
 	if !b.searchBucket(key) {
-		newNode := &LinkedList{key: key} // initilize the linkedlist
-		newNode.next = b.head            // add the head of the linkedlist to the next of the newNode
-		b.head = newNode                 // make the newNode as the head of the linkedlist
+		// newNode := &LinkedList{key: key} // initilize the linkedlist
+		// newNode.next = b.head            // add the head of the linkedlist to the next of the newNode
+		// b.head = newNode                 // make the newNode as the head of the linkedlist
+		b.linkedList.insertLinkedList(key)
+		b.length++
 	} else {
 		fmt.Println("Key exists: ", key)
 	}
+}
+
+func (l *LinkedList) insertLinkedList(key string) {
+	newNode := &Node{key: key}
+	newNode.next = l.head
+	l.head = newNode
 }
 
 func returnIndex(key string) int {
@@ -54,19 +67,20 @@ func (h *HashTable) delete(key string) {
 
 func (b *Buckets) deleteKey(key string) {
 	if b.searchBucket(key) {
-		if b.head.key == key {
-			b.head = b.head.next // if the head is the target deletion then make head.next as the head
+		if b.linkedList.head.key == key {
+			b.linkedList.head = b.linkedList.head.next // if the head is the target deletion then make head.next as the head
+			b.length--
 			return
 		}
 
-		currentNode := b.head
+		currentNode := b.linkedList.head
 		for currentNode.next != nil {
 			if currentNode.next.key == key {
 				currentNode.next = currentNode.next.next // if the nest of currenNode is the target deletion then make the next of the next of the list the current.next
 			}
 			currentNode = currentNode.next
 		}
-
+		b.length--
 	} else {
 		fmt.Println("Key Doesn't exists: ", key)
 	}
@@ -77,7 +91,11 @@ func (h *HashTable) search(key string) bool {
 }
 
 func (b *Buckets) searchBucket(key string) bool {
-	currentNode := b.head
+	return b.linkedList.searchLinkedList(key)
+}
+
+func (l *LinkedList) searchLinkedList(key string) bool {
+	currentNode := l.head
 	for currentNode != nil {
 		if currentNode.key == key {
 			return true
@@ -93,7 +111,7 @@ func (h *HashTable) update(key string, value string) {
 
 func (b *Buckets) updateBucket(key string, value string) {
 	if b.searchBucket(key) {
-		currentNode := b.head
+		currentNode := b.linkedList.head
 		for currentNode != nil {
 			if currentNode.key == key {
 				currentNode.key = value
@@ -115,6 +133,7 @@ func initialize() *HashTable {
 	ht := &HashTable{}
 	for arr := range ht.array {
 		ht.array[arr] = &Buckets{}
+		ht.array[arr].linkedList = &LinkedList{}
 	}
 	return ht
 }
@@ -151,4 +170,9 @@ func main() {
 	ht.delete("Pikachuuuuu")
 	fmt.Println(ht.search("Pikachuuuuu"))
 	ht.update("Swathi", "Krishna Swathi")
+
+	fmt.Println("length of each bucket")
+	for index := range ht.array {
+		fmt.Println(index, ht.array[index].length)
+	}
 }
